@@ -1,3 +1,6 @@
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
 plugins {
     `java-library`
     id("com.vanniktech.maven.publish") version "0.28.0"
@@ -12,15 +15,15 @@ repositories {
 }
 
 dependencies {
-    implementation("net.java.dev.jna:jna:5.9.0:jpms")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    implementation("net.java.dev.jna:jna:5.17.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.13.4")
+    testImplementation("org.junit.platform:junit-platform-launcher:1.13.4")
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
-    withSourcesJar()
-    withJavadocJar()
 }
 
 tasks.test {
@@ -29,6 +32,12 @@ tasks.test {
 
 mavenPublishing {
     coordinates(group.toString(), "jfa", version.toString())
+    configure(
+        JavaLibrary(
+            javadocJar = JavadocJar.Empty(),
+            sourcesJar = true,
+        )
+    )
 
     pom {
         name.set("JFA")
